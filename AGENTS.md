@@ -36,13 +36,22 @@ Admin 自身代码如果要改，也应在本仓库独立开发、Review、验�
 - 提升内容时只处理内容协议明确允许的文件，不同步前台业务代码。
 - 不允许内容提升覆盖 Prod 的 HTML/CSS/JS 前台环境差异。
 
-## Codex 工作方式
-任务开始前读取：
-1. `AGENTS.md`
-2. `docs/ACTIVE_TASK.md`
-3. 与任务相关的计划文档
+## Codex 启动任务前必须先同步 GitHub
+GitHub 是规则和 ACTIVE_TASK 的权威来源，本地治理文件可能过期。
 
+每次用户要求执行当前任务时，Codex 必须先：
+1. 确认当前 Workspace / Git 仓库是 `myBlog-admin`。
+2. 执行 `git status`；若存在未知未提交修改，停止并中文报告，不直接 pull。
+3. 常规新任务从 `main` 基线开始，执行 `git pull --ff-only origin main`。
+4. pull 成功后重新读取最新 `AGENTS.md`、`docs/ACTIVE_TASK.md` 和 ACTIVE_TASK 引用的计划文档。
+5. 只执行重新读取后的最新任务，不依据 pull 前缓存/旧文件行动。
+
+若 fast-forward 失败、remote 异常、分支状态有歧义或工作区不干净：停止并报告，不自行 reset/clean/force/rebase 覆盖。
+
+## Codex 工作方式
 只执行 ACTIVE_TASK 授权范围。完成后 push 分支，等待 ChatGPT Review；未经授权不自行合并 main。
+
+活跃任务分支建立后，原则上不要在 Review 前无关推进 `main`；若 `main` 必须前进，Review 前必须先把最新 main 安全同步到任务分支并重新验证，且不得扩大任务范围。
 
 ## 完成报告
 用中文报告分支、commit SHA、修改文件、测试结果、push 状态和未完成风险。
