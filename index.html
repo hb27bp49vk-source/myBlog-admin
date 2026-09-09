@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>博客维护台</title>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<header>
+  <h1>博客维护台</h1>
+  <span class="badge">myBlog-admin</span>
+  <span class="muted">单作者 · 直连 GitHub · 无后端</span>
+</header>
+<div class="wrap">
+
+  <div class="panel">
+    <h2>GitHub Token</h2>
+    <div class="row">
+      <input type="password" id="token-input" placeholder="粘贴 Personal Access Token（需 repo 权限）">
+      <button class="primary" onclick="saveToken()">保存</button>
+      <span class="muted">仅存浏览器本地，不发给任何服务器</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>写内容</h2>
+    <div class="row" style="margin-bottom:10px">
+      <input type="text" id="post-title" placeholder="标题">
+      <select id="post-type">
+        <option value="article">文章</option>
+        <option value="note">短记</option>
+        <option value="topic">专题</option>
+      </select>
+      <input type="text" id="post-tags" placeholder="标签，逗号分隔">
+    </div>
+    <div class="editor">
+      <textarea id="post-body" placeholder="在此用 Markdown 写作… 左侧写，右侧实时预览" rows="18"></textarea>
+      <div class="preview" id="preview"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="muted">插图片：</label>
+      <input type="file" id="img-file" accept="image/*">
+      <button onclick="uploadImage()">上传并插入</button>
+      <span class="hint">自动压缩到 1200px / JPEG，存入测试库 assets/uploads</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>发布</h2>
+    <div class="row">
+      <button class="primary" onclick="publish()">发布到测试库</button>
+      <button class="green" onclick="promote()">一键提升到正式库</button>
+      <button onclick="loadList()">刷新列表</button>
+    </div>
+    <div class="hint" style="margin:8px 0">流程：写 → 发布到【测试库】→ 在测试博客核对 → 无误后点【提升】覆盖【正式库】。</div>
+    <div id="msg"></div>
+  </div>
+
+  <div class="panel">
+    <h2>测试库现有内容</h2>
+    <div id="post-list"></div>
+  </div>
+
+</div>
+<script src="./admin.js"></script>
+</body>
+</html>
