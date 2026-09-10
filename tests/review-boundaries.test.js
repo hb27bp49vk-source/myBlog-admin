@@ -1,0 +1,12 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const source = fs.readFileSync(require('node:path').join(__dirname, '..', 'admin.js'), 'utf8');
+assert.match(source, /legacyDate/);
+assert.match(source, /validateContentDocument\(JSON\.parse\(t\),true\)/);
+assert.match(source, /validateItem\(kind,item,false\)/);
+assert.match(source, /sha\}\)/);
+assert.match(source, /r\.status===409\|\|r\.status===422/);
+assert.match(source, /BASELINE_CONFLICT/);
+assert.doesNotMatch(source, /myBlog-prod|localStorage|sessionStorage|console\.log/);
+console.log('Review boundary source checks passed');
