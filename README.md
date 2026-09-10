@@ -1,16 +1,16 @@
 # myBlog-admin 维护台
 
-独立仓库托管的博客维护台（GitHub Pages 静态站点），**纯前端、无后端**。
+独立仓库中的博客维护台，**纯前端、无后端**。当前未部署 GitHub Pages，不设线上正式入口。
 
 ## 架构
-- 维护台前端：本仓库（`myBlog-admin`），GitHub Pages 托管
+- 维护台前端：本仓库（`myBlog-admin`），当前未部署 GitHub Pages
 - 数据后端：**无**。浏览器用你的 Personal Access Token 直接调 `api.github.com`
   （公司网络放行 + 开放 CORS，无需任何中间云）
 - Phase B 仅读取和写入 `myBlog-test` 仓库根目录的 `content.json`（`schemaVersion: 1`）
 - 本阶段禁用图片写入，且不存在任何 Prod 读取、写入或提升能力
 
 ## 使用
-1. 打开 https://hb27bp49vk-source.github.io/myBlog-admin/
+1. 在受控的本地 HTTP 环境中打开本仓库页面；当前没有可用的 GitHub Pages 正式入口
 2. 粘贴仅限 `myBlog-test` 的 Fine-grained PAT，权限仅为 `Contents: Read and write`
 3. 读取并校验 Test `content.json`，新建或编辑文章、短记、专题；右侧可预览 Markdown
 4. 「校验并写入 Test」后，使用回执中的 commit SHA、content blob SHA 和条目 ID 在测试博客核对
