@@ -6,19 +6,20 @@
 - 维护台前端：本仓库（`myBlog-admin`），GitHub Pages 托管
 - 数据后端：**无**。浏览器用你的 Personal Access Token 直接调 `api.github.com`
   （公司网络放行 + 开放 CORS，无需任何中间云）
-- 文章数据存 `myBlog-test` / `myBlog-prod` 仓库的 `content.js`
-- 图片存对应仓库的 `assets/uploads/`
+- Phase B 仅读取和写入 `myBlog-test` 仓库根目录的 `content.json`（`schemaVersion: 1`）
+- 本阶段禁用图片写入，且不存在任何 Prod 读取、写入或提升能力
 
 ## 使用
 1. 打开 https://hb27bp49vk-source.github.io/myBlog-admin/
-2. 粘贴 GitHub PAT（需 `repo` 权限），点保存（仅存浏览器本地）
-3. 左侧写 Markdown，右侧实时预览；可上传图片自动插入
-4. 「发布到测试库」→ 在测试博客核对 → 「一键提升」覆盖正式库
+2. 粘贴仅限 `myBlog-test` 的 Fine-grained PAT，权限仅为 `Contents: Read and write`
+3. 读取并校验 Test `content.json`，新建或编辑文章、短记、专题；右侧可预览 Markdown
+4. 「校验并写入 Test」后，使用回执中的 commit SHA、content blob SHA 和条目 ID 在测试博客核对
 
 ## 安全说明
-- PAT 仅存浏览器 `localStorage`，不上传任何服务器
-- 单作者场景可接受；如担心，建议用**仅限仓库**的细粒度 Token，并随时在 GitHub 吊销
-- 不要在公司公用电脑勾选"保存 Token"
+- PAT 不上传任何服务器，也不写入 localStorage、sessionStorage、DOM 持久记录或 Git 内容；刷新页面即清除
+- 仅使用 Fine-grained PAT，并只授权 `myBlog-test` 的 `Contents: Read and write`
+- 写入携带读取时的 `content.json` blob SHA；GitHub 报告冲突时停止并要求重新读取，不会覆盖远端基线
+- Phase B 禁用图片写入，因为浏览器 Contents API 无法保证图片与内容单一原子提交
 
 ## 为什么没有用 EdgeOne Makers 做后端
 Makers 部署后的 `*.edgeone.cool` 端点被预览网关 `eo_token` 保护（实测 401），
