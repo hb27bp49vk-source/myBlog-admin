@@ -4,40 +4,44 @@
 Ready for Codex
 
 ## 最近完成
-2026-09-09：Admin 功能、结构与内容发布安全审计已完成并通过 ChatGPT Review，已合并 main。
+- Admin 内容协议与安全发布设计已完成并合并 main。
+- myBlog-test 内容协议 Phase A 已完成并通过人工验收。
+- myBlog-prod 内容协议 Phase A 已完成并通过正式站人工验收。
 
-- 审计 commit：`0a0369a76eacf4547636d50733c3e8d313647c0b`
-- 审计报告：`docs/audits/2026-09-09-admin-function-release-safety-audit.md`
-- 结论：当前 Admin 需要专项重构；在完成协议与安全发布设计前，不应恢复真实 Prod 内容提升。
+设计依据：
+`docs/designs/2026-09-09-admin-content-protocol-and-safe-publishing.md`
 
 ## 当前任务
-设计独立 `myBlog-admin` 的正式内容协议与安全发布流程，只做设计，不改业务代码。
+实现 **Admin Phase B：Test 内容维护能力**。
 
-完整计划：
-`docs/plans/2026-09-09-admin-content-protocol-and-safe-publishing-design.md`
+完整 Plan：
+`docs/plans/2026-09-10-admin-phase-b-test-content-maintenance.md`
 
 ## Codex 执行要求
-1. 先确认当前仓库/Workspace 为 `myBlog-admin`，工作区干净且位于 `main`。
-2. 执行 `git pull --ff-only origin main`；pull 成功后重新读取最新 `AGENTS.md`、本文件、上述 Plan 和已完成审计报告。
-3. 从最新 main 创建 `codex/admin-content-protocol-safe-publishing-design`。
-4. 只做设计，不使用真实 PAT，不向 Test/Prod 写入内容或图片，不修改业务代码。
-5. 仅新增：`docs/designs/2026-09-09-admin-content-protocol-and-safe-publishing.md`。
-6. 设计必须明确文章/短记/专题字段协议、协议版本、唯一 ID、Test 验收版本、Prod 基线、选择性提升、差异预览、图片依赖、失败状态、回滚证据和权限边界。
-7. 必须明确是否继续使用 `content.js` 或迁移 JSON，并给出兼容/迁移方案。
-8. 必须明确 Prod 基线变化时默认停止并重新 Review；不得设计自动覆盖。
-9. 必须保持代码发布与内容发布分离，Admin 不得同步前台 HTML/CSS/JS 或环境配置。
-10. 完成后 commit：`docs: 设计博客 Admin 内容协议与安全发布`，push 分支后停止，不合并 main。
+1. 确认当前仓库/Workspace 为 `myBlog-admin`，工作区干净且位于 `main`。
+2. 执行 `git pull --ff-only origin main`；成功后重新读取最新 `AGENTS.md`、本文件、Plan 和设计文档。
+3. 从最新 main 创建 `codex/admin-phase-b-test-content-maintenance`。
+4. 只实现面向 `myBlog-test` 的 `content.json` 内容维护，不实现、不恢复任何 Prod 写入/提升。
+5. 文章/短记/专题遵守 schemaVersion 1 与稳定 `<kind>_<ULID>` 协议；编辑不得改变 ID。
+6. 写入必须基于读取到的 Test `content.json` blob SHA 做冲突保护；基线变化立即停止并要求重新加载，禁止覆盖。
+7. 写入成功必须报告 commit SHA、content blob SHA、条目 ID；页面明确标识“Test / 测试站”。
+8. 不使用 `eval` / `Function`；不得把真实 PAT 写入仓库、日志、DOM 持久记录或发布证据。
+9. Test token 只允许推荐 Fine-grained PAT + `myBlog-test` + Contents Read and write；旧的默认明文长期保存行为不得继续作为默认。
+10. 图片只有在能满足 Plan 的路径、哈希、imageRefs 和一致性要求时才实现；否则本阶段明确禁用图片写入，不得做部分成功流程。
+11. 不修改 Test/Prod 仓库业务代码，不迁移历史 Test `admin/`，不做无关 UI 重构/文件拆分。
+12. 完成验证后 commit + push 分支并停止，等待 ChatGPT Review；不要合并 main。
 
-## 完成报告
-中文报告：
-- 分支
-- base SHA
-- commit SHA
-- 设计文档路径
-- 内容存储格式决策
-- 唯一 ID / 兼容策略
-- Test→Prod 提升模型
-- 图片与失败/回滚模型
-- 后续实现阶段拆分
-- push 状态
-- 明确说明未使用真实 PAT、未写 Test/Prod、未修改业务代码、未合并 main
+## 必须报告
+- 分支、base SHA、最终 commit SHA、修改文件
+- Test `content.json` 读取/校验/写入模型
+- 新建与编辑三类内容的支持情况
+- stable ID 生成与编辑不变验证
+- SHA 冲突保护验证
+- 图片本阶段实现或禁用的明确结论及原因
+- PAT 存储/权限行为变化
+- mock/fixture、语法检查、`git diff --check` 等验证结果
+- push、工作区状态
+- 明确未写 Prod、未修改 Test/Prod、未使用真实 PAT、未合并 main
+
+## 门禁
+ChatGPT Review + 合并 Admin main + 用户实际 Admin 页面 Test 内容维护人工验收全部通过前，不得开始 Phase C Prod Publisher。
