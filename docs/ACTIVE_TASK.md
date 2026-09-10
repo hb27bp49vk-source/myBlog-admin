@@ -1,13 +1,14 @@
 # ACTIVE TASK — myBlog Admin
 
 ## Status
-Review Fix Required
+Awaiting Human Acceptance
 
 ## 最近完成
 - Admin 内容协议与安全发布设计已完成并合并 main。
 - myBlog-test / myBlog-prod 内容协议 Phase A 已完成并通过人工验收。
-- Admin Phase B 首次实现已推送：`2ef1476cd41462026873227af89ee1ff9a4bfcd0`。
-- ChatGPT 已完成首轮 GitHub Review；当前不得合并 main。
+- Admin Phase B 实现与 Review Fix 已完成并通过 ChatGPT Review。
+- Phase B 已 fast-forward 合并到 main。
+- 当前 Admin main 业务实现 SHA：`5faeb47f104b8770adc0cb82cfb6795734f37d35`。
 
 设计依据：
 `docs/designs/2026-09-09-admin-content-protocol-and-safe-publishing.md`
@@ -16,45 +17,24 @@ Review Fix Required
 `docs/plans/2026-09-10-admin-phase-b-test-content-maintenance.md`
 
 ## 当前任务
-在现有分支 `codex/admin-phase-b-test-content-maintenance` 上完成 Review Fix。
+执行 Admin Phase B 的人工验收：实际使用 Admin 页面连接 `myBlog-test`，验证 Test 内容维护流程是否可用。
 
-## Review 阻塞项
+## 人工验收范围
+1. 打开当前 Admin 页面，确认页面明确标识为 Test / 测试站内容维护。
+2. 使用仅限 `myBlog-test`、`Contents: Read and write` 的 Fine-grained PAT 连接 Test。
+3. 验证能成功读取当前真实 `myBlog-test/content.json`，包括既有 legacy `YYYY.MM.DD` 日期内容。
+4. 新建一条低风险测试内容，确认：
+   - 自动生成稳定 `<kind>_<ULID>` ID；
+   - 日期写入为 `YYYY-MM-DD`；
+   - 发布后显示 commit SHA、content blob SHA、item ID；
+   - Test 页面能看到并正确渲染该内容。
+5. 编辑刚创建的测试条目，确认稳定 ID 不变，修改能正确写回并在 Test 页面生效。
+6. 不执行任何 Prod 写入或提升；Phase B 仍不存在 Prod 发布入口。
+7. 图片写入保持禁用，本轮不验收图片上传。
+8. PAT 不应默认持久保存在 localStorage/sessionStorage；刷新页面后需要重新输入是预期行为。
 
-### P0 — 当前真实 Test content.json 无法被 Admin 读取
-当前 `myBlog-test/content.json` 的既有内容日期仍为 `YYYY.MM.DD`（例如 `2026.09.08`），而首次实现的 `admin.js` 读取校验只接受 `YYYY-MM-DD`。因此 Admin 对当前真实 Test 基线执行 `load()` 时会在严格校验阶段失败，Phase B 无法实际进入维护流程。
+## 验收失败处理
+若任一步骤失败：停止，不开始 Phase C。记录失败步骤、页面现象与必要截图，交由 ChatGPT 判断是否需要 Review Fix。
 
-设计协议要求新写入日期为 ISO `YYYY-MM-DD`，但本 Review Fix 不允许直接修改 myBlog-test 业务内容，也不能放宽未来写入协议。需要在 Admin 侧设计一个明确、受控的“legacy read compatibility / write normalization”方案：
-- 能读取当前已经发布并通过 Phase A 验收的 Test `content.json`；
-- 新建/编辑写入必须继续产出设计规定的 ISO `YYYY-MM-DD`；
-- 不得静默把整份未编辑 Test 内容批量改写/归一化；
-- 不得因为编辑一个条目而顺带改变其他条目的日期/字段；
-- 若协议层无法在不破坏严格写入约束的前提下做到，停止并报告，不要自行修改 Test 仓库。
-
-### P1 — 自动测试与报告不一致，关键门禁没有实际覆盖
-当前 `tests/admin-phase-b.test.js` 只覆盖纯内容校验、重复 ID、编辑 ID 不变和 ULID 格式；没有实际覆盖报告中声称的：
-- GitHub Contents API 写入携带读取到的 blob SHA；
-- 409 / 422 baseline conflict 时停止写入；
-- 写入成功回执必须包含 commit SHA + content blob SHA；
-- 不会访问 Prod 写接口；
-- PAT 不进入 localStorage/sessionStorage/持久 DOM/日志。
-
-Review Fix 必须补充 mock/fixture 测试，使这些关键边界有可重复验证证据。必要时将网络函数以可测试方式导出/注入，但不要做无关重构。
-
-## Review Fix 要求
-1. 保持当前分支，不要切回 main 创建新分支，不要 rebase 已推送分支。
-2. 先读取当前分支最新 `AGENTS.md`、本文件、Plan、Design。
-3. 同时只读核对当前 `myBlog-test/content.json` 的真实 schema/日期格式；不得修改 Test 仓库。
-4. 修复 P0，并补齐 P1 自动测试。
-5. 保持既有安全边界：Test-only、无 Prod 写入/提升、稳定 ID、blob SHA 冲突保护、内存 PAT、图片写入禁用、无 eval/Function。
-6. 执行 `node --check admin.js`、完整 Phase B 测试、`git diff --check`。
-7. commit + push 到同一分支后停止，不要 merge main。
-
-## 必须报告
-- Review Fix commit SHA 与修改文件
-- 如何兼容当前真实 Test 日期，同时保证新写入 ISO 且不批量改写未编辑内容
-- mock 测试如何证明 SHA 请求、409/422 停止、完整回执、无 Prod 写接口、PAT 不持久化
-- 全部测试结果
-- 明确未修改 myBlog-test / myBlog-prod、未使用真实 PAT、未 merge main
-
-## 门禁
-本 Review Fix 经 ChatGPT 再 Review 通过前，不得合并 Admin main；合并后仍需用户实际 Admin→Test 人工验收，之后才可讨论 Phase C。
+## 验收通过后的门禁
+只有用户确认上述人工验收通过后，Phase B 才算正式完成；随后再更新治理状态并讨论 Phase C 安全 Prod Publisher。
