@@ -21,7 +21,7 @@ Admin 自身代码如果要改，也应在本仓库独立开发、Review、验�
 当前维护台为纯前端 GitHub Pages，浏览器通过用户提供的 GitHub PAT 直接调用 GitHub API。
 
 现有内容路径：
-- 文章/短记/专题：目标仓库 `content.js`
+- 文章/短记/专题：目标仓库 content.json；content.js 仅由 Test 前台作为 legacy 只读回退源。
 - 上传图片：目标仓库 `assets/uploads/`
 
 ## 安全规则

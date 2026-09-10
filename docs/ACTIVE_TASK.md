@@ -8,6 +8,7 @@ Ready for Codex
 - myBlog-test / myBlog-prod 内容协议 Phase A 已完成并通过人工验收。
 - Admin Phase B：Test 内容维护实现、Review Fix、合并与人工验收均已完成。
 - 2026-09-10：setup refresh 排障临时目录已完成审查与清理；正式目录仅保留 myBlog-admin / myBlog-test / myBlog-prod。
+- 2026-09-10：真实 Test 内容协议完整兼容 Hotfix 已完成；该 Hotfix 不推进或实现 Phase C。
 
 设计依据：
 `docs/designs/2026-09-09-admin-content-protocol-and-safe-publishing.md`

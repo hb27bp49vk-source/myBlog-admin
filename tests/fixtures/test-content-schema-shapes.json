@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "articles": [{"id":"article_01J00000000000000000000001","date":"2026.09.08","type":"项目复盘","category":"project","reading":"15 分钟","title":"代表性文章","summary":"覆盖展示型 type、点分日期与可选字段。","body":"正文","cover":"./assets/covers/cover-0.png","imageRefs":["./assets/uploads/article_01J00000000000000000000001/example.png"]}],
+  "notes": [{"id":"note_01J00000000000000000000001","date":"2026.09.06","label":"代表性短记","category":"life","text":"正文","imageRefs":["./assets/uploads/note_01J00000000000000000000001/example.png"]}],
+  "topics": [{"id":"topic_01J00000000000000000000001","title":"代表性专题","status":"进行中 / 样例专题","date":"2026.08—09","text":"正文","category":"custom-topic-category","imageRefs":["./assets/uploads/topic_01J00000000000000000000001/example.png"]}]
+}

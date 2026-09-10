@@ -35,8 +35,9 @@
         <div class="form-grid">
           <label>内容类型<select id="content-kind"><option value="article">文章</option><option value="note">短记</option><option value="topic">专题</option></select></label>
           <label>稳定 ID<input id="content-id" type="text" readonly placeholder="新建时生成"></label>
-          <label>日期<input id="content-date" type="date"></label>
-          <label class="category-field">分类<select id="content-category"><option value="project">project</option><option value="ai">ai</option><option value="life">life</option></select></label>
+          <label>日期<input id="content-date" type="text" placeholder="推荐 YYYY-MM-DD；保留既有日期格式"></label>
+          <label class="category-field">分类<input id="content-category" type="text" list="category-options" placeholder="推荐 project、ai、life"></label>
+          <datalist id="category-options"><option value="project"><option value="ai"><option value="life"></datalist>
           <label class="article-only">文章类型<input id="article-type" type="text" value="article" placeholder="article"></label>
           <label class="article-only">阅读时长<input id="article-reading" type="text" placeholder="例如 5 min"></label>
           <label class="article-only wide">标题<input id="content-title" type="text" placeholder="文章标题"></label>
