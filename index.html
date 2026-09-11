@@ -68,15 +68,21 @@
       <h2 id="phase-c-heading">Phase C：受控 Prod 内容提升</h2>
       <ol class="phase-c-steps"><li>读取 Test 内容</li><li>读取 Prod 基线</li><li>选择有差异内容</li><li>确认 Test 人工验收</li><li>生成并复核计划</li><li>提交受控会话</li></ol>
       <p>第 2 步依赖 Phase B 已成功读取 Test content.json。浏览器不会接触 Prod PAT；提交后仍须 GitHub Environment approval。</p>
+      <section class="phase-c-zone"><div class="phase-c-zone-head"><h3>读取与差异</h3><span>公开只读</span></div>
       <div class="phase-c-action"><button type="button" id="phase-c-read">第 2 步：读取 Prod 基线</button><p id="phase-c-msg" role="status" aria-live="polite">请先完成第 1 步：读取 Test 内容。</p></div>
       <dl class="baseline"><div><dt>Prod main 基线</dt><dd id="phase-c-prod-sha">尚未读取</dd></div></dl>
       <label class="phase-c-toggle"><input id="phase-c-diff-only" type="checkbox"> 仅显示有差异内容（新增或更新）</label>
       <div id="phase-c-selection" class="phase-c-selection"><p class="muted">读取 Prod 基线后显示可选择内容。</p></div>
+      </section>
+      <section class="phase-c-zone"><div class="phase-c-zone-head"><h3>人工验收与 release plan</h3><span>必须人工确认</span></div>
       <div class="phase-c-form"><label>Test Pages URL<input id="phase-c-test-url" type="url" placeholder="已人工验收的 Test Pages URL"></label><label>已验收 Test commit SHA<input id="phase-c-test-sha" type="text" placeholder="40 位 SHA"></label><label>操作员标识<input id="phase-c-operator" type="text" placeholder="GitHub 用户名或审批标识"></label><label class="phase-c-toggle"><input id="phase-c-confirmed" type="checkbox"> 我已完成人工 Test 页面验收</label></div>
       <button type="button" class="primary" id="phase-c-plan" disabled>第 5 步：生成 release plan</button>
       <label>复核后的 release plan<textarea id="phase-c-output" rows="12" readonly></textarea></label>
+      </section>
+      <section class="phase-c-zone phase-c-submit"><div class="phase-c-zone-head"><h3>受控提交</h3><span>Environment approval</span></div>
       <label>仅用于触发本仓库 workflow 的操作员 token<input id="phase-c-dispatch-token" type="password" autocomplete="off"></label>
       <button type="button" class="primary" id="phase-c-dispatch" disabled>第 6 步：提交受控发布会话</button>
+          </section>
     </section>
   </main>
   <script src="./admin.js"></script>

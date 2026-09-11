@@ -1,16 +1,16 @@
 # ACTIVE TASK — myBlog Admin
 
-最后更新：2026-09-11（第二轮 User Acceptance FAIL，进入 Visual Polish Acceptance Fixes）
+最后更新：2026-09-11（Visual Polish Acceptance Fixes 完成，Awaiting ChatGPT Review）
 
 ## Status
 
-`P0 Active (Acceptance Fixes)`（Admin Phase C —— Visual Polish）
+`Awaiting ChatGPT Review`（Admin Phase C —— Visual Polish）
 
 Phase C 安全 Review 结论继续为 **PASS**；第一次 Acceptance Fix commit `b791679391126d6c49700073806e661e54179451` 也已通过 ChatGPT Review。
 
 第二轮用户人工验收确认：核心可用性已经明显改善，但桌面端整体排版仍不够成熟，尤其是 Phase C 三列卡片墙与 Phase B 右侧过窄列表，仍不适合作为长期日常发布界面。因此 User Acceptance 再次 **FAIL（Visual UX）**。
 
-当前进入第二轮 Acceptance Fixes，仅做视觉与布局 polish，不改变任何已 Review PASS 的安全/发布语义。
+Visual Polish Acceptance Fixes 已完成并待 ChatGPT Review，不改变任何已 Review PASS 的安全/发布语义。
 
 权威 Acceptance Fixes：
 
@@ -22,7 +22,7 @@ Phase C 安全 Review 结论继续为 **PASS**；第一次 Acceptance Fix commit
 
 ## 当前优先级
 
-- **`P0 Active (Acceptance Fixes)`**：完成第二轮 Visual Polish。
+- **`Awaiting ChatGPT Review`**：Visual Polish 已完成，等待 Review。
 - **`P1 Queued`**：无。
 - **`P2 Backlog`**：等待 ChatGPT 后续派发。
 
