@@ -3,40 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>myBlog Test 内容维护</title>
+  <title>MyBlog Admin</title>
   <link rel="stylesheet" href="./admin.css">
 </head>
 <body>
-  <header class="site-header">
-    <div>
-      <p class="eyebrow">myBlog-admin</p>
-      <h1>Test 内容维护</h1>
+  <header class="app-header">
+    <div class="brand-block">
+      <div class="brand-title">MyBlog Admin</div>
+      <div class="brand-subtitle">写作 · 整理 · 发布</div>
     </div>
-    <span class="environment-badge">仅写入 Test / 测试站</span>
+    <div class="header-actions">
+      <div class="env-switch" aria-label="环境">
+        <button type="button" class="env-option active" aria-pressed="true">Test（草稿库）</button>
+        <button type="button" class="env-option" aria-pressed="false" disabled>Prod（发布预览）</button>
+      </div>
+      <a class="site-link" href="https://chance-hang.github.io/myBlog-test/" target="_blank" rel="noopener">▣ <span>查看站点</span></a>
+      <div class="user-block" aria-label="当前用户">
+        <span class="avatar">H</span>
+        <span class="user-name">杭诚</span>
+        <span class="chevron">⌄</span>
+      </div>
+    </div>
   </header>
-  <main class="wrap">
-    <section class="panel credentials" aria-labelledby="credential-heading">
-      <div>
-        <h2 id="credential-heading">Test 访问凭据</h2>
-        <p>仅接受 Fine-grained PAT：只选择 <code>myBlog-test</code>，权限仅为 <code>Contents: Read and write</code>。令牌只保留在本页内存，刷新页面即清除。</p>
+
+  <main class="app-shell">
+    <aside class="sidebar">
+      <nav class="main-nav" aria-label="内容导航">
+        <button type="button" class="nav-item active" data-kind-filter="article"><span class="nav-icon">▤</span><span>文章</span></button>
+        <button type="button" class="nav-item" data-kind-filter="note"><span class="nav-icon">▧</span><span>短记</span></button>
+        <button type="button" class="nav-item" data-kind-filter="topic"><span class="nav-icon">□</span><span>专题</span></button>
+        <button type="button" class="nav-item" id="publish-nav"><span class="nav-icon">✈</span><span>发布</span></button>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <nav class="secondary-nav" aria-label="辅助导航">
+        <button type="button" class="nav-item"><span class="nav-icon">⚙</span><span>设置</span></button>
+        <button type="button" class="nav-item"><span class="nav-icon">?</span><span>帮助</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <section class="mode-card" aria-label="当前模式">
+          <div class="mode-label">当前模式</div>
+          <div class="mode-value"><span class="db-icon">◉</span><strong>Test（草稿库）</strong></div>
+          <div class="mode-note">仅写入 Test content</div>
+        </section>
+        <details class="access-card">
+          <summary>连接 Test</summary>
+          <div class="access-body">
+            <label for="token-input">Fine-grained PAT</label>
+            <input type="password" id="token-input" autocomplete="off" spellcheck="false" placeholder="粘贴 Test PAT">
+            <button type="button" class="primary compact-button" id="connect-button">读取 Test content.json</button>
+            <p>令牌仅保留在本页内存；只允许 myBlog-test / Contents: Read and write。</p>
+          </div>
+        </details>
       </div>
-      <div class="row">
-        <label class="sr-only" for="token-input">Test Fine-grained PAT</label>
-        <input type="password" id="token-input" autocomplete="off" spellcheck="false" placeholder="粘贴 Test Fine-grained PAT">
-        <button type="button" class="primary" id="connect-button">读取 Test content.json</button>
+    </aside>
+
+    <section class="content-column" aria-labelledby="list-heading">
+      <div class="column-head">
+        <div class="title-line"><h1 id="list-heading">文章</h1><span id="item-count" class="count">0</span></div>
+        <button type="button" class="primary new-button" id="new-button">＋ 新建文章</button>
       </div>
+      <label class="search-box" for="content-search"><span>⌕</span><input id="content-search" type="search" placeholder="搜索标题、摘要或 ID..."></label>
+      <div class="filters-row">
+        <select id="type-filter" aria-label="全部类型"><option value="all">全部类型</option><option value="article">文章</option><option value="note">短记</option><option value="topic">专题</option></select>
+        <select id="status-filter" aria-label="全部状态"><option value="all">全部状态</option><option value="ready">可编辑</option></select>
+        <select id="sort-filter" aria-label="排序"><option value="desc">按日期排序</option><option value="asc">日期正序</option></select>
+      </div>
+      <div id="post-list" class="post-list"><div class="empty-state">连接 Test 后显示内容。</div></div>
     </section>
-    <section class="workspace-grid">
-      <section class="panel editor-panel" aria-labelledby="editor-heading">
-        <div class="panel-heading">
-          <div><h2 id="editor-heading">内容条目</h2><p id="edit-mode">新建条目会生成不可变稳定 ID。</p></div>
-          <button type="button" id="new-button">新建条目</button>
+
+    <section class="editor-column" aria-labelledby="editor-heading">
+      <div class="editor-topbar">
+        <div class="editor-title-wrap">
+          <input id="editor-display-title" class="editor-title-input" type="text" readonly value="选择或新建一个条目">
+          <div id="edit-mode" class="editor-subline">新建条目会生成不可变稳定 ID。</div>
         </div>
+        <div class="editor-top-actions"><span id="kind-pill" class="kind-pill">article</span><button type="button" class="more-button" aria-label="更多">•••</button></div>
+      </div>
+
+      <div class="editor-tabs" role="tablist" aria-label="编辑视图">
+        <button type="button" class="editor-tab active" data-view="edit">编辑</button>
+        <button type="button" class="editor-tab" data-view="preview">预览</button>
+        <button type="button" class="editor-tab" data-view="meta">元数据</button>
+      </div>
+
+      <div class="toolbar" aria-hidden="true">
+        <span>↶</span><span>B</span><span><em>I</em></span><span>H1</span><span>H2</span><span>H3</span><span>☷</span><span>☰</span><span>🔗</span><span>▧</span><span>&lt;/&gt;</span><span class="toolbar-spacer"></span><span>正文（Markdown）</span><span>?</span>
+      </div>
+
+      <section id="edit-view" class="view-panel active">
+        <div class="editor-split">
+          <div class="markdown-pane">
+            <textarea id="content-body" rows="24" spellcheck="false" placeholder="在此写入 Markdown。图片上传在当前阶段禁用。"></textarea>
+          </div>
+          <article class="preview" id="preview" aria-label="Markdown 预览"></article>
+        </div>
+      </section>
+
+      <section id="preview-view" class="view-panel">
+        <article class="preview preview-full" id="preview-full" aria-label="完整 Markdown 预览"></article>
+      </section>
+
+      <section id="meta-view" class="view-panel metadata-panel">
         <div class="form-grid">
           <label>内容类型<select id="content-kind"><option value="article">文章</option><option value="note">短记</option><option value="topic">专题</option></select></label>
           <label>稳定 ID<input id="content-id" type="text" readonly placeholder="新建时生成"></label>
-          <label>日期<input id="content-date" type="text" placeholder="推荐 YYYY-MM-DD；保留既有日期格式"></label>
-          <label class="category-field">分类<input id="content-category" type="text" list="category-options" placeholder="推荐 project、ai、life"></label>
+          <label>日期<input id="content-date" type="text" placeholder="YYYY-MM-DD"></label>
+          <label class="category-field">分类<input id="content-category" type="text" list="category-options" placeholder="project / ai / life"></label>
           <datalist id="category-options"><option value="project"><option value="ai"><option value="life"></datalist>
           <label class="article-only">文章类型<input id="article-type" type="text" value="article" placeholder="article"></label>
           <label class="article-only">阅读时长<input id="article-reading" type="text" placeholder="例如 5 min"></label>
@@ -46,23 +119,22 @@
           <label class="topic-only wide">专题标题<input id="topic-title" type="text" placeholder="专题标题"></label>
           <label class="topic-only">状态<input id="topic-status" type="text" placeholder="例如 active"></label>
         </div>
-        <label class="body-label" for="content-body">正文（Markdown）</label>
-        <div class="editor"><textarea id="content-body" rows="18" placeholder="在此写入 Markdown。图片上传在 Phase B 中禁用。"></textarea><article class="preview" id="preview" aria-label="Markdown 预览"></article></div>
-        <p class="image-notice">图片写入已禁用。纯浏览器 Contents API 无法保证图片与 content.json 原子提交，因此本阶段不会上传或引用图片。</p>
+        <div class="safety-note">图片写入已禁用。纯浏览器 Contents API 无法保证图片与 content.json 原子提交，因此本阶段不会上传或引用图片。</div>
       </section>
-      <aside class="side-stack">
-        <section class="panel publish-panel" aria-labelledby="publish-heading">
-          <h2 id="publish-heading">写入 Test</h2>
-          <dl class="baseline"><div><dt>目标</dt><dd>myBlog-test / content.json</dd></div><div><dt>读取基线 blob SHA</dt><dd id="baseline-sha">尚未读取</dd></div></dl>
-          <button type="button" class="primary wide-button" id="publish-button" disabled>校验并写入 Test</button>
-          <p class="hint">写入会携带当前 blob SHA。远端基线变化时将停止，不会覆盖。</p>
-          <div id="msg" role="status" aria-live="polite"></div><div id="receipt" class="receipt hidden" aria-live="polite"></div>
-        </section>
-        <section class="panel" aria-labelledby="list-heading">
-          <div class="panel-heading compact"><h2 id="list-heading">Test 现有内容</h2><button type="button" id="refresh-button" disabled>重新读取</button></div>
-          <div id="post-list" class="post-list"><p class="muted">连接 Test 后显示内容。</p></div>
-        </section>
-      </aside>
+
+      <footer class="editor-footer">
+        <div class="status-area">
+          <span class="status-dot"></span><span id="autosave-label">编辑内容仅保留在当前页面</span>
+          <span class="baseline-inline">blob SHA：<code id="baseline-sha">尚未读取</code></span>
+        </div>
+        <div class="footer-actions">
+          <span class="word-count" id="word-count">字数：0</span>
+          <button type="button" class="secondary-action" id="refresh-button" disabled>重新读取</button>
+          <button type="button" class="primary submit-button" id="publish-button" disabled>提交到 Test</button>
+        </div>
+      </footer>
+      <div id="msg" role="status" aria-live="polite"></div>
+      <div id="receipt" class="receipt hidden" aria-live="polite"></div>
     </section>
   </main>
   <script src="./admin.js"></script>
