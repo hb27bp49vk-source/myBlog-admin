@@ -1,107 +1,104 @@
 # ACTIVE TASK — myBlog Admin
 
-最后更新：2026-09-10（Phase C Planning Stage）
+最后更新：2026-09-11（Phase C Implementation 授权）
 
 ## Status
 
-`P0 Active (Planning)`（Admin Phase C —— 安全 Prod Publisher）
+`P0 Active (Implementation)`（Admin Phase C —— 安全 Prod Publisher）
 
-STOP 状态：`Awaiting ChatGPT Review`。本次提交完成后停在 Review，不自行进入 Implementation Stage。
+当前执行已由 ChatGPT 明确授权。Executor 完成 Implementation 后必须 STOP 在 `Awaiting ChatGPT Review`，不得自行 merge main、不得自行进入真实 Prod 发布。
 
 ## 当前优先级
 
-- **`P0 Active (Planning)`**：Admin Phase C Planning。本次范围只读审计 + Planning 文档；不启动 Implementation、不向 Prod 写内容、不使用真实 Prod PAT、不创建 Phase C 实施分支。详见 `docs/plans/2026-09-10-admin-phase-c-planning-decisions.md`。
-- 没有其他 `P0 Active`。
+- **`P0 Active (Implementation)`**：Admin Phase C —— 安全 Prod Publisher。
 - **`P1 Queued`**：无。
-- **`P2 Backlog`**：等待 ChatGPT 派发非 Phase C 的新需求；新需求到达前 Executor 不主动实施任何变更。
+- **`P2 Backlog`**：等待 ChatGPT 后续派发。
+
+## 权威 Plan
+
+本轮 Implementation 唯一实施入口：
+
+`docs/plans/2026-09-11-admin-phase-c-implementation.md`
+
+Planning 历史与决策输入：
+
+`docs/plans/2026-09-10-admin-phase-c-planning-decisions.md`
+
+设计依据：
+
+`docs/designs/2026-09-09-admin-content-protocol-and-safe-publishing.md`
+
+既有概念 Plan：
+
+`docs/plans/2026-09-10-admin-phase-c-safe-prod-publisher.md`
+
+若文档之间出现冲突，本轮以当前显式用户指令 → 本文件 → `2026-09-11-admin-phase-c-implementation.md` → 其他历史文档的顺序解释；发现实质冲突必须 STOP 并报告 ChatGPT。
+
+## ChatGPT Review 结论
+
+2026-09-11：Phase C Planning Review PASS。
+
+C1–C9 已由 ChatGPT 裁决并写入 Implementation Plan，其中核心结论：
+
+- C1：采用 GitHub Actions 受控发布会话；Prod PAT 只存在于 Actions Secret / Environment Secret，浏览器不接触。
+- C4：Prod baseline 冲突必须重新读取、重新生成 diff / plan、重新 Review；禁止静默继续。
+- C5：图片必须与内容、发布证据同一 Prod commit 原子完成，否则 STOP。
+- C6：发布证据进入 `myBlog-prod/docs/releases/<releaseId>.json`，且必须按可公开暴露的非敏感数据设计。
+- C7：Phase C v1 不使用 release 暂存分支；使用 Environment approval + 写入前 baseline 复核 + 单 commit 直接写 main 的受控模型。
+- C8：真实 Test Pages 人工验收必须绑定 Test SHA + URL + 用户确认；截图可选。
+- C9：Phase C 不实现删除。
+
+完整 C1–C9 以 Implementation Plan 为准。
+
+## Implementation 授权边界
+
+授权基线：`69c50c62c8daa10edee9d7732623dafc16697329`。
+
+Executor 允许：
+
+1. 先 `git pull --ff-only origin main`，确认工作区 clean、main、ahead/behind 正常，再重新读取本文件与 Implementation Plan。
+2. 创建实施分支，建议 `codex/admin-phase-c-implementation`。
+3. 修改 myBlog-admin 的 UI / JS / CSS、仓库内发布脚本、GitHub Actions workflow、tests / fixtures / 实施文档。
+4. 只读访问 myBlog-test / myBlog-prod 用于 baseline、schema 与页面验证。
+5. 使用 mock / fake credential 完成自动测试。
+
+禁止：
+
+1. 使用或要求真实 Prod PAT 进行开发测试。
+2. 实际向 myBlog-prod 写内容、图片或发布记录。
+3. 修改 myBlog-test / myBlog-prod 业务代码或内容协议。
+4. 把 Phase B 浏览器 Contents API Test 写入路径复制为 Prod 写入口。
+5. 绕过 baseline 检查、force、reset、clean、重写历史或静默覆盖。
+6. 自行修改 C1–C9 核心安全边界；遇到设计冲突必须 STOP。
+7. 自行 merge 实施分支到 main。
 
 ## STOP 状态机
 
-按 `GLOBAL_RULES.md §10`：
-
-- `Awaiting ChatGPT Review`：commit / push 完成后等 ChatGPT Review diff。**当前所在。**
-- `Awaiting User Acceptance`：Review 通过后等用户人工验收。
-- `Blocked`：缺信息 / 冲突 / 依赖未到位。
-- `Completed / Accepted`：用户人工验收通过，ChatGPT 派发下一 Task 或执行发布。
-
-Phase C 从 Planning Stage 推进到 Implementation Stage 必须再次经 ChatGPT 显式重新授权（`P0 Active (Planning)` → `P0 Active (Implementation)`），并至少先解决 `docs/plans/2026-09-10-admin-phase-c-planning-decisions.md` §5 的 C1 受控发布器执行边界决策。
+- Implementation 进行中：按当前 P0 与 Implementation Plan 执行。
+- 实施 commit + push 完成后：`Awaiting ChatGPT Review`。
+- ChatGPT Review 通过后：`Awaiting User Acceptance`。
+- 用户人工验收通过后：`Completed / Accepted`。
+- 任意凭据 / baseline / 治理冲突：`Blocked`。
 
 ## 最近完成
 
 - Admin 内容协议与安全发布设计已完成并合并 main。
 - myBlog-test / myBlog-prod 内容协议 Phase A 已完成并通过人工验收。
 - Admin Phase B：Test 内容维护实现、Review Fix、合并与人工验收均已完成。
-- 2026-09-10：setup refresh 排障临时目录已完成审查与清理；正式目录仅保留 myBlog-admin / myBlog-test / myBlog-prod。
-- 2026-09-10：真实 Test 内容协议完整兼容 Hotfix 已完成；该 Hotfix 不推进或实现 Phase C。
-- 2026-09-10：Username Migration 验收中发现的 Test 前台短记详情 Markdown 渲染问题已单独记录，不在 Admin 范围。
-- 2026-09-10：Workflow 3.0 Phase 2 治理同步（`90d9de7`）已完成；Phase C 仍处于 P1 Queued 的硬约束生效。
-- 2026-09-10：Phase C Planning Stage 提交：Status `P1 Queued` → `P0 Active (Planning)`；新增 `docs/plans/2026-09-10-admin-phase-c-planning-decisions.md`；仍停在 `Awaiting ChatGPT Review`。
+- 2026-09-10：Workflow 3.0 Phase 2 治理同步完成。
+- 2026-09-10：Phase C 从 `P1 Queued` 提升到 `P0 Active (Planning)`，Planning commit `69c50c62c8daa10edee9d7732623dafc16697329`。
+- 2026-09-11：Codex 在零旧聊天上下文条件下成功按 GitHub 治理接管，识别 `P0 Active (Planning)` / `Awaiting ChatGPT Review`，未越权修改；随后按授权仅执行 Phase B 回归验证，工作区保持 clean。
+- 2026-09-11：ChatGPT Planning Review PASS，C1–C9 写入 `docs/plans/2026-09-11-admin-phase-c-implementation.md`，Phase C 正式升级为 `P0 Active (Implementation)`。
 
-设计依据：
-`docs/designs/2026-09-09-admin-content-protocol-and-safe-publishing.md`
+## Implementation 完成后必须报告
 
-Phase C 概念 Plan（只读参考，不自动据此启动 Implementation）：
-`docs/plans/2026-09-10-admin-phase-c-safe-prod-publisher.md`
+只需汇报：
 
-Phase C Planning Stage Decisions（本阶段产出；阻塞 C1 受控发布器决策）：
-`docs/plans/2026-09-10-admin-phase-c-planning-decisions.md`
+- branch
+- base SHA
+- final commit SHA
+- tests / checks
+- push
+- blocker（如有）
 
-## 当前任务
-
-`P0 Active (Planning)`：**Admin Phase C Planning**。
-
-本次任务允许：
-
-1. 读取与本次任务相关的设计文档、Phase C 既有 Plan 与既有审计。
-2. 写或修订 `docs/plans/2026-09-10-admin-phase-c-planning-decisions.md` 与本文件。
-3. 跑既有 `tests/` 验证 Phase B 没回归（`node --check admin.js` / Node test 入口）。
-4. `git pull --ff-only origin main` 与 `git status` 状态检查。
-
-禁止（与既有 §升级前的硬约束 同义，再强调）：
-
-1. 自行创建 `codex/admin-phase-c-*` 或任何 Phase C 实施分支。
-2. 自行把 Phase C 升级为 `P0 Active (Implementation)`。
-3. 启动 Phase C Implementation、写任何 Prod 内容、降低安全标准。
-4. 使用真实 Prod PAT 做自动化测试。
-5. 修改 myBlog-test / myBlog-prod 业务代码。
-6. 把 Phase B 的浏览器 Contents API Test 写入模式直接复制为 Prod 一键发布。
-7. 在浏览器内持有、记录、转发 Prod PAT。
-
-## 升级路径
-
-Phase C Implementation Stage 启动必须经过（与既有 §升级路径 同义）：
-
-1. ChatGPT 在本文件显式将状态由 `P0 Active (Planning)` 推进到 `P0 Active (Implementation)`，并明确：
-   - base SHA；
-   - 选择性 Test→Prod 提升模型；
-   - **C1**：受控发布器执行边界（候选 1 / 2 / 3，见 Planning Decisions §4）；
-   - **C2–C9**：其余决策项（见 Planning Decisions §5）；
-   - Prod baseline 绑定方式；
-   - 未选 Prod 内容保持方式；
-   - 图片边界；
-   - 凭据 / 权限实现策略；
-   - 发布证据格式。
-2. ChatGPT 通过 GitHub 治理文件或单独指令派发 Executor。
-3. Executor 完成 Implementation → commit / push → 停在 `Awaiting ChatGPT Review`。
-4. ChatGPT GitHub Review 通过 → `Awaiting User Acceptance` → 用户人工验收。
-5. 用户人工验收通过 → `Completed / Accepted` → 允许后续受控 Prod 写入启用。
-
-任何 Executor 不得跳过上述任一步骤；Phase C Planning Stage 不得自行跳到 Implementation。
-
-## 门禁
-
-Phase C 经 ChatGPT GitHub Review 通过并完成后续人工验收前，不得合并或启用不受控的 Prod 写入。
-
-## 必须报告（Phase C 启动后）
-
-- 分支、base SHA、最终 commit SHA、修改文件
-- 选择性提升模型
-- Test 验收 SHA / Prod baseline 绑定方式
-- Prod 基线冲突停止方式
-- 未选 Prod 内容保持方式
-- 图片最终边界
-- 凭据/权限实现
-- 发布证据格式
-- 测试结果
-- push / 工作区状态
-- 明确确认未整份覆盖 Prod、未隐式删除、未修改 Test/Prod 业务代码、未使用真实 Prod PAT、未 merge main
+并明确确认：未真实写 Prod、未使用真实 Prod PAT、未修改 Test/Prod 业务代码、未 merge main。
