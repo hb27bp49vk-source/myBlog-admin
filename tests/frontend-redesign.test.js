@@ -1,0 +1,1 @@
+'use strict';const assert=require('node:assert/strict'),fs=require('node:fs');const source=fs.readFileSync('admin.js','utf8');assert.match(source,/library-search/);assert.match(source,/library-filter/);assert.match(source,/data-mode/);assert.match(source,/localeCompare/);console.log('Frontend workbench source tests passed');
