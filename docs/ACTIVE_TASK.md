@@ -1,14 +1,20 @@
 # ACTIVE TASK — myBlog Admin
 
-最后更新：2026-09-11（Admin Workbench V2 完成，Awaiting ChatGPT Review）
+最后更新：2026-09-11（Workbench V2 Review FAIL，进入 Review Fixes）
 
 ## Status
 
-`Awaiting ChatGPT Review`（myBlog Admin Workbench V2）
+`P0 Active (Review Fixes)`（myBlog Admin Workbench V2）
 
-上一版 Frontend Redesign 虽通过 ChatGPT 代码 Review，但用户桌面人工验收明确 FAIL：布局在真实 16:9 桌面窗口仍出现内容侵占、编辑区被压窄、信息架构混乱等问题。用户决定停止继续修补上一版维护台，按新的 CMS 工作台方向直接重构。
+Workbench V2 implementation commit：
 
-Workbench V2 已完成并待 ChatGPT Review。
+`fc97e1abeb3766c354745d03d53234ab84e9e904`
+
+ChatGPT Review 结论：**FAIL**。主体方向正确，但右侧主编辑区的信息架构和新增行为测试尚未达到 Workbench V2 Plan 要求。
+
+权威 Review：
+
+`docs/reviews/2026-09-11-admin-workbench-v2-review.md`
 
 当前权威 Plan：
 
@@ -18,48 +24,62 @@ Phase C 安全 Review 继续有效：
 
 `docs/reviews/2026-09-11-admin-phase-c-chatgpt-review.md`
 
-## 当前产品方向
+## 已确认通过
 
-以成熟 Git-based CMS 的交互为参考，但继续保持轻量原生架构。
+- 一级导航为 `文章 / 短记 / 发布`；
+- 文章分类包含 `项目(project) / AI(ai) / 生活(life)`；
+- Prod 仍通过独立发布入口进入；
+- 未新增框架 / build system / CDN 运行时依赖；
+- 未发现 Phase B Test-only 与 Phase C C1–C9 安全边界被削弱。
 
-核心约束：
+## 当前 Review Fixes
 
-- 左侧一级导航只保留 `文章 / 短记 / 发布`；
-- 文章分类使用现有真实分类 `项目(project) / AI(ai) / 生活(life)`；
-- `专题` 不再作为一级高频入口，底层兼容数据暂不删除；
-- 具体 `type` 只作为标签 / 次级筛选，不进入全局主导航；
-- 中间为高密度内容列表；
-- 右侧为大编辑区；
-- 默认单编辑视图，预览 / 元数据切换，分屏仅按需开启；
-- 顶部只表达当前 Test 状态，不把 Prod 做成普通环境切换；
-- Prod 只能从独立“发布”入口进入 Phase C；
-- 不使用误导性的“自动保存”远端语义；
-- 16:9 桌面必须无跨栏、无重叠、无横向侵占；
-- 不新增框架、build system、CDN 运行时依赖。
+### 1. 完成右侧编辑区三态
 
-完整信息架构、响应式、性能、测试和验收标准见 Workbench V2 Plan。
+必须实现：
+
+- `编辑`（默认）
+- `预览`
+- `元数据`
+
+stable ID、日期、分类、type、reading 等技术/辅助信息进入元数据视图，不再长期全部铺在主编辑视觉中。
+
+如保留分屏，必须显式按需开启，不得默认双栏。
+
+### 2. 降级专题高频入口
+
+保留 topic schema / 历史兼容，但：
+
+- 一级导航不出现专题；
+- 默认新建/日常编辑路径只面向文章 / 短记；
+- `专题` 不得继续与文章/短记平级出现在高频内容类型选择中；
+- 若必须保留 topic 兼容编辑，放入弱化的兼容入口。
+
+### 3. 补 Workbench V2 真实行为测试
+
+必须覆盖：
+
+- 文章 / 短记 / 发布导航行为；
+- project / ai / life 分类筛选；
+- 搜索 / 日期倒序；
+- 列表选中进入编辑；
+- 编辑 / 预览 / 元数据切换；
+- Test state / baseline 在页面模式切换后保留；
+- 关键 16:9 断点布局 contract（至少覆盖 1366×768、1440×810、1536×864、1920×1080 的无横向重叠/侵占规则）。
+
+现有 Phase B / Phase C 回归与 `git diff --check` 必须继续通过。
 
 ## Executor 开始前
 
-继续在现有 `codex/admin-phase-c-implementation` 分支实施，不新建第二条实现分支。
+继续在现有 `codex/admin-phase-c-implementation` 分支追加修复。
 
 必须：
 
 1. `git pull --ff-only origin codex/admin-phase-c-implementation`；
 2. 确认本地与远端一致、worktree clean；
-3. 重新读取 `AGENTS.md`、本文件、Workbench V2 Plan、Phase C 安全 Review；
-4. 先盘点当前 DOM / event wiring / tests，再重构；
-5. 当前环境继续使用已验证正常的 shell / PowerShell 文件修改路径，避免已知异常的内置 patch/helper；
-6. 异常立即 STOP，不得 reset / clean / force。
-
-## 允许修改
-
-- `index.html`
-- `admin.css`
-- `admin.js` 中 UI / render / filter / navigation / editor-view 相关部分
-- `phase-c.js` 中纯 UI / render / wiring 相关部分
-- 前端行为测试 / fixtures
-- 治理文档
+3. 重新读取 `AGENTS.md`、本文件、Workbench V2 Plan、Workbench V2 Review、Phase C 安全 Review；
+4. 继续使用 shell / PowerShell 文件修改路径，避免已知异常的内置 patch/helper；
+5. 异常立即 STOP，不得 reset / clean / force。
 
 ## 禁止改变
 
@@ -75,27 +95,10 @@ Phase C 安全 Review 继续有效：
 - 不得 merge main；
 - 不得 reset / clean / force / 重写历史。
 
-如重构需要修改 publisher、安全校验、release plan 语义或 Test 写入协议，立即 `Blocked`。
-
-## 测试要求
-
-保持现有全部回归，并新增 Workbench V2 行为测试，具体见 Plan。
-
-至少覆盖：
-
-- 文章 / 短记 / 发布导航；
-- project / ai / life 分类筛选；
-- 搜索与日期倒序；
-- 列表选中进入编辑；
-- 编辑 / 预览 / 元数据切换；
-- Test state / baseline 在页面模式切换后保留；
-- 响应式布局关键断点 contract；
-- `git diff --check`。
-
 ## STOP 状态机
 
-- 当前：`Awaiting ChatGPT Review`。
-- Workbench V2 implementation commit + push 后：`Awaiting ChatGPT Review`。
+- 当前：`P0 Active (Review Fixes)`。
+- Review Fix commit + push 后：`Awaiting ChatGPT Review`。
 - ChatGPT Review PASS 后：`Awaiting User Acceptance`。
 - 用户 16:9 桌面人工验收通过后：`Completed / Accepted`。
 - 任意安全 / 凭据 / 治理 / 实现冲突：`Blocked`。
@@ -103,8 +106,8 @@ Phase C 安全 Review 继续有效：
 ## 完成后只需报告
 
 - branch
-- implementation base SHA
-- final Workbench V2 commit SHA
+- previous Workbench V2 SHA
+- final Review Fix SHA
 - tests / checks
 - push
 - blocker
