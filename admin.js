@@ -60,4 +60,4 @@ if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',()
   el('user-menu-button').onclick=()=>message('当前用户：杭诚。此静态维护台没有独立账户会话。');
   reset();
 })
-})(typeof window!=='undefined'?window:globalThis));
+})(typeof window!=='undefined'?window:globalThis);
