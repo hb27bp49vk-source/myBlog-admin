@@ -1,12 +1,12 @@
 # ACTIVE TASK — myBlog Admin
 
-最后更新：2026-09-11（Frontend Redesign Re-review：仅剩 state 保留测试 blocker）
+最后更新：2026-09-11（Frontend Redesign state 保留测试修复完成，Awaiting ChatGPT Review）
 
 ## Status
 
-`P0 Active (Review Fixes)`（myBlog Admin Frontend Redesign）
+`Awaiting ChatGPT Review`（myBlog Admin Frontend Redesign）
 
-Frontend Redesign fix commit `776a1030fc994ca365b6671bf5e653da2b505abb` 已重新 Review。
+Frontend Redesign state 保留测试修复已完成并待 ChatGPT Review。
 
 当前实现与 UI 语义未发现新的功能/安全 blocker；全局 Header 双模式语义、搜索/过滤/排序 helper 均已修正。**仅剩 1 个测试质量 blocker：当前“模式切换后 state 保留”测试是假阳性。**
 
@@ -73,7 +73,7 @@ Phase C 安全 Review：
 
 ## STOP 状态机
 
-- 当前：`P0 Active (Review Fixes)`。
+- 当前：`Awaiting ChatGPT Review`。
 - 最小 fix commit + push 后：`Awaiting ChatGPT Review`。
 - ChatGPT Review PASS 后：`Awaiting User Acceptance`。
 - 用户桌面人工验收通过后：`Completed / Accepted`。
