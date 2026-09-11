@@ -14,15 +14,13 @@
     </div>
     <div class="header-actions">
       <div class="env-switch" aria-label="环境">
-        <button type="button" class="env-option active" aria-pressed="true">Test（草稿库）</button>
-        <button type="button" class="env-option" aria-pressed="false" disabled>Prod（发布预览）</button>
+        <button type="button" class="env-option active" aria-pressed="true" id="test-env-button">Test（草稿库）</button>
+        <button type="button" class="env-option" aria-pressed="false" id="prod-env-button">Prod（发布预览）</button>
       </div>
       <a class="site-link" href="https://chance-hang.github.io/myBlog-test/" target="_blank" rel="noopener">▣ <span>查看站点</span></a>
-      <div class="user-block" aria-label="当前用户">
-        <span class="avatar">H</span>
-        <span class="user-name">杭诚</span>
-        <span class="chevron">⌄</span>
-      </div>
+      <button type="button" class="user-block" id="user-menu-button" aria-label="当前用户">
+        <span class="avatar">H</span><span class="user-name">杭诚</span><span class="chevron">⌄</span>
+      </button>
     </div>
   </header>
 
@@ -36,8 +34,8 @@
       </nav>
       <div class="sidebar-divider"></div>
       <nav class="secondary-nav" aria-label="辅助导航">
-        <button type="button" class="nav-item"><span class="nav-icon">⚙</span><span>设置</span></button>
-        <button type="button" class="nav-item"><span class="nav-icon">?</span><span>帮助</span></button>
+        <button type="button" class="nav-item" id="settings-nav"><span class="nav-icon">⚙</span><span>设置</span></button>
+        <button type="button" class="nav-item" id="help-nav"><span class="nav-icon">?</span><span>帮助</span></button>
       </nav>
 
       <div class="sidebar-bottom">
@@ -46,7 +44,7 @@
           <div class="mode-value"><span class="db-icon">◉</span><strong>Test（草稿库）</strong></div>
           <div class="mode-note">仅写入 Test content</div>
         </section>
-        <details class="access-card">
+        <details class="access-card" id="access-card">
           <summary>连接 Test</summary>
           <div class="access-body">
             <label for="token-input">Fine-grained PAT</label>
@@ -66,7 +64,7 @@
       <label class="search-box" for="content-search"><span>⌕</span><input id="content-search" type="search" placeholder="搜索标题、摘要或 ID..."></label>
       <div class="filters-row">
         <select id="type-filter" aria-label="全部类型"><option value="all">全部类型</option><option value="article">文章</option><option value="note">短记</option><option value="topic">专题</option></select>
-        <select id="status-filter" aria-label="全部状态"><option value="all">全部状态</option><option value="ready">可编辑</option></select>
+        <select id="status-filter" aria-label="全部状态"><option value="all">全部状态</option><option value="editing">当前编辑</option></select>
         <select id="sort-filter" aria-label="排序"><option value="desc">按日期排序</option><option value="asc">日期正序</option></select>
       </div>
       <div id="post-list" class="post-list"><div class="empty-state">连接 Test 后显示内容。</div></div>
@@ -78,7 +76,10 @@
           <input id="editor-display-title" class="editor-title-input" type="text" readonly value="选择或新建一个条目">
           <div id="edit-mode" class="editor-subline">新建条目会生成不可变稳定 ID。</div>
         </div>
-        <div class="editor-top-actions"><span id="kind-pill" class="kind-pill">article</span><button type="button" class="more-button" aria-label="更多">•••</button></div>
+        <div class="editor-top-actions">
+          <span id="kind-pill" class="kind-pill">article</span>
+          <button type="button" class="more-button" id="editor-more-button" aria-label="更多">•••</button>
+        </div>
       </div>
 
       <div class="editor-tabs" role="tablist" aria-label="编辑视图">
@@ -87,22 +88,30 @@
         <button type="button" class="editor-tab" data-view="meta">元数据</button>
       </div>
 
-      <div class="toolbar" aria-hidden="true">
-        <span>↶</span><span>B</span><span><em>I</em></span><span>H1</span><span>H2</span><span>H3</span><span>☷</span><span>☰</span><span>🔗</span><span>▧</span><span>&lt;/&gt;</span><span class="toolbar-spacer"></span><span>正文（Markdown）</span><span>?</span>
+      <div class="toolbar" aria-label="Markdown 工具栏">
+        <button type="button" class="toolbar-button" data-command="undo" title="撤销">↶</button>
+        <button type="button" class="toolbar-button" data-command="bold" title="加粗"><strong>B</strong></button>
+        <button type="button" class="toolbar-button" data-command="italic" title="斜体"><em>I</em></button>
+        <button type="button" class="toolbar-button" data-command="h1">H1</button>
+        <button type="button" class="toolbar-button" data-command="h2">H2</button>
+        <button type="button" class="toolbar-button" data-command="h3">H3</button>
+        <button type="button" class="toolbar-button" data-command="ul" title="无序列表">☷</button>
+        <button type="button" class="toolbar-button" data-command="ol" title="有序列表">☰</button>
+        <button type="button" class="toolbar-button" data-command="link" title="插入链接">🔗</button>
+        <button type="button" class="toolbar-button" data-command="image" title="图片">▧</button>
+        <button type="button" class="toolbar-button" data-command="code" title="代码">&lt;/&gt;</button>
+        <span class="toolbar-spacer"></span><span>正文（Markdown）</span>
+        <button type="button" class="toolbar-button" id="toolbar-help" title="Markdown 帮助">?</button>
       </div>
 
       <section id="edit-view" class="view-panel active">
         <div class="editor-split">
-          <div class="markdown-pane">
-            <textarea id="content-body" rows="24" spellcheck="false" placeholder="在此写入 Markdown。图片上传在当前阶段禁用。"></textarea>
-          </div>
+          <div class="markdown-pane"><textarea id="content-body" rows="24" spellcheck="false" placeholder="在此写入 Markdown。图片上传在当前阶段禁用。"></textarea></div>
           <article class="preview" id="preview" aria-label="Markdown 预览"></article>
         </div>
       </section>
 
-      <section id="preview-view" class="view-panel">
-        <article class="preview preview-full" id="preview-full" aria-label="完整 Markdown 预览"></article>
-      </section>
+      <section id="preview-view" class="view-panel"><article class="preview preview-full" id="preview-full" aria-label="完整 Markdown 预览"></article></section>
 
       <section id="meta-view" class="view-panel metadata-panel">
         <div class="form-grid">
