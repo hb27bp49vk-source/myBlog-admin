@@ -89,4 +89,17 @@ assert.ok(editorTabLine, 'editor-tab 绑定必须存在');
 assert.match(editorTabLine, /activateView\(b\.dataset\.view\)/, 'editor-tab 必须直接调 activateView');
 assert.doesNotMatch(editorTabLine, /confirmDiscardIfDirty/, 'editor-tab 切换不得 confirmDiscardIfDirty');
 
+// 14. initialSnapshot 不应存在于 state（死字段已清理）
+assert.doesNotMatch(adminJs, /initialSnapshot/, 'state 中不得残留 initialSnapshot 死字段');
+
+// 15. toolbar 修改正文必须 dirty（防御性显式 markDirty）
+const wrapSelectionLine = lineOf(/^function wrapSelection\(/);
+assert.match(wrapSelectionLine, /markDirty\(\)/, 'wrapSelection 必须显式 markDirty()，避免 input 事件隐式依赖');
+
+const prefixLinesLine = lineOf(/^function prefixLines\(/);
+assert.match(prefixLinesLine, /markDirty\(\)/, 'prefixLines 必须显式 markDirty()，避免 input 事件隐式依赖');
+
+const toolbarCommandLine = lineOf(/^function toolbarCommand\(/);
+assert.match(toolbarCommandLine, /markDirty\(\)/, 'toolbarCommand undo 分支必须显式 markDirty()（直接赋值不触发 input 事件）');
+
 console.log('Phase D editing reliability tests passed');
