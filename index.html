@@ -117,7 +117,7 @@
         <div class="form-grid">
           <label>内容类型<select id="content-kind"><option value="article">文章</option><option value="note">短记</option><option value="topic">专题</option></select></label>
           <label>稳定 ID<input id="content-id" type="text" readonly placeholder="新建时生成"></label>
-          <label>日期<input id="content-date" type="text" placeholder="YYYY-MM-DD"></label>
+          <label>日期<input id="content-date" type="date" placeholder="YYYY-MM-DD"></label>
           <label class="category-field">分类<input id="content-category" type="text" list="category-options" placeholder="project / ai / life"></label>
           <datalist id="category-options"><option value="project"><option value="ai"><option value="life"></datalist>
           <label class="article-only">文章类型<input id="article-type" type="text" value="article" placeholder="article"></label>
@@ -132,10 +132,11 @@
       </section>
 
       <footer class="editor-footer">
-        <div class="status-area">
-          <span class="status-dot"></span><span id="autosave-label">编辑内容仅保留在当前页面</span>
-          <span class="baseline-inline">blob SHA：<code id="baseline-sha">尚未读取</code></span>
-        </div>
+<div class="status-area">
+        <span class="status-dot"></span><span id="autosave-label">编辑内容仅保留在当前页面</span>
+        <span id="save-status" class="save-status" aria-live="polite"></span>
+        <span class="baseline-inline">blob SHA：<code id="baseline-sha">尚未读取</code></span>
+      </div>
         <div class="footer-actions">
           <span class="word-count" id="word-count">字数：0</span>
           <button type="button" class="secondary-action" id="refresh-button" disabled>重新读取</button>
@@ -151,7 +152,10 @@
     <ol class="phase-c-steps"><li>读取 Test 内容</li><li>读取 Prod 基线</li><li>选择差异</li><li>记录 Test 验收</li><li>生成计划</li><li>提交受控会话</li></ol>
     <div class="phase-c-grid">
       <section class="phase-c-zone"><h2>1. 基线与差异</h2><p class="muted">先在 Test 工作台读取并校验 content.json，再读取公开 Prod 基线。</p><button type="button" class="primary" id="phase-c-read">读取 Prod 基线</button><p id="phase-c-msg" role="status" aria-live="polite">请先完成 Test 内容读取。</p><p class="baseline-inline">Prod main：<code id="phase-c-prod-sha">尚未读取</code></p><label class="phase-c-toggle"><input id="phase-c-diff-only" type="checkbox"> 仅显示有差异内容</label><div id="phase-c-selection" class="phase-c-selection"><p class="empty-state">读取 Prod 基线后显示可选择内容。</p></div></section>
-      <aside class="phase-c-zone phase-c-review"><h2>2. 人工验收与计划</h2><label>Test Pages URL<input id="phase-c-test-url" type="url" placeholder="已人工验收的 Test Pages URL"></label><label>已验收 Test commit SHA<input id="phase-c-test-sha" type="text" placeholder="40 位 SHA"></label><label>操作员标识<input id="phase-c-operator" type="text" placeholder="GitHub 用户名或审批标识"></label><label class="phase-c-toggle"><input id="phase-c-confirmed" type="checkbox"> 我已完成人工 Test 页面验收</label><button type="button" class="primary" id="phase-c-plan" disabled>生成 release plan</button><label>复核后的 release plan<textarea id="phase-c-output" rows="12" readonly></textarea></label><h2>3. 受控提交</h2><p class="muted">此 token 仅用于触发本仓库 workflow，不是 Prod PAT，不会持久化。</p><label>操作员 workflow token<input id="phase-c-dispatch-token" type="password" autocomplete="off"></label><button type="button" class="primary" id="phase-c-dispatch" disabled>提交受控发布会话</button></aside>
+      <aside class="phase-c-zone phase-c-review"><h2>2. 人工验收与计划</h2><label>Test Pages URL<input id="phase-c-test-url" type="url" placeholder="已人工验收的 Test Pages URL"></label><label>已验收 Test commit SHA<input id="phase-c-test-sha" type="text" placeholder="40 位 SHA"></label><label>操作员标识<input id="phase-c-operator" type="text" placeholder="GitHub 用户名或审批标识"></label><label class="phase-c-toggle"><input id="phase-c-confirmed" type="checkbox"> 我已完成人工 Test 页面验收</label><button type="button" class="primary" id="phase-c-plan" disabled>生成 release plan</button><label>复核后的 release plan<textarea id="phase-c-output" rows="12" readonly></textarea></label><h2>3. 受控提交</h2><p class="muted">此 token <strong>仅用于触发 myBlog-admin GitHub Actions</strong>，不是 Prod PAT，不会持久化到任何浏览器存储；建议使用一次性 Fine-grained PAT。</p>
+        <p class="muted">最小权限目标：仓库 <code>chance-hang/myBlog-admin</code>，<code>Actions: Read and write</code>。</p>
+        <label>操作员 workflow token<input id="phase-c-dispatch-token" type="password" autocomplete="off" placeholder="myBlog-admin 的 Actions R/W PAT"></label>
+        <button type="button" class="primary" id="phase-c-dispatch" disabled>提交受控发布会话</button></aside>
     </div>
   </section>
   <script src="./admin.js"></script>
