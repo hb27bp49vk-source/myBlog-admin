@@ -1,14 +1,14 @@
 # ACTIVE TASK — myBlog Admin
 
-最后更新：2026-09-11（Frontend Redesign state 保留测试修复完成，Awaiting ChatGPT Review）
+最后更新：2026-09-11（Frontend Redesign Re-review PASS，进入 User Acceptance）
 
 ## Status
 
-`Awaiting ChatGPT Review`（myBlog Admin Frontend Redesign）
+`Awaiting User Acceptance`（myBlog Admin Frontend Redesign）
 
-Frontend Redesign state 保留测试修复已完成并待 ChatGPT Review。
+ChatGPT 已完成对 Test Fix commit `1f9fd7688e288cf007791df8ecbda7c609d78126` 的最终 Re-review，结论为 **PASS**。
 
-当前实现与 UI 语义未发现新的功能/安全 blocker；全局 Header 双模式语义、搜索/过滤/排序 helper 均已修正。**仅剩 1 个测试质量 blocker：当前“模式切换后 state 保留”测试是假阳性。**
+此前唯一测试质量 blocker 已关闭：模式切换测试现在直接验证真实导出的 `admin.state.document` / `admin.state.blobSha` 在 Test / Prod 切换后保持不变，同时验证对应工作区可见状态正确。
 
 权威 Re-review：
 
@@ -22,70 +22,40 @@ Phase C 安全 Review：
 
 `docs/reviews/2026-09-11-admin-phase-c-chatgpt-review.md`
 
-## 唯一 blocker
+## 当前 Review 结论
 
-`tests/frontend-redesign.test.js` 当前使用一个与真实 `admin.state` 无关的本地对象 `retained`，在调用 `modeVisibility()` 前后断言该本地对象未变化。
+Frontend Redesign 已通过 ChatGPT Review。确认：
 
-这不能证明真实已加载的 `state.document` / `state.blobSha` 在 Test / Prod 模式切换后仍保留，因此不满足此前 Review 明确要求的真实行为测试。
+1. 全局 title / Header / badge 与 `内容维护（Test） / 发布到 Prod` 双工作模式一致；
+2. Test 内容库已支持搜索、类型过滤、日期倒序和整行选择编辑；
+3. 搜索、过滤、排序、模式切换已由真实行为测试覆盖；
+4. Test / Prod 切换会保持已加载的真实 `admin.state.document` / `blobSha`；
+5. 未引入框架、build system 或 CDN 运行时依赖；
+6. 未发现 Phase B Test-only 写入边界、content schema / stable ID 或 Phase C C1–C9 安全模型被削弱；
+7. Executor 报告 Frontend workbench behavior、Phase B、Phase C plan safety、boundary、publisher mock、差异分类/过滤、review boundary 全部通过，`git diff --check` 通过。
 
-完整说明与修复条件见 Re-review 文档。
+## User Acceptance 边界
 
-## Executor 授权边界
+当前只允许桌面人工验收，不得 merge main，不得执行真实 Prod 发布。
 
-继续在现有 `codex/admin-phase-c-implementation` 分支追加**最小测试性修复**，不得扩大到新的 UI redesign。
+重点验收：
 
-开始前必须：
-
-1. `git pull --ff-only origin codex/admin-phase-c-implementation`；
-2. 确认本地与远端一致、worktree clean；
-3. 重新读取 `AGENTS.md`、本文件、Re-review；
-4. 继续使用 shell / PowerShell 文件修改路径；
-5. 异常立即 STOP，不得 reset / clean / force。
-
-允许：
-
-- 将模式切换封装为最小可测试 helper / function；
-- 使用轻量 fake DOM / stub；
-- 修改 `tests/frontend-redesign.test.js`；
-- 对 `admin.js` 做仅为测试真实模式切换所需的最小重构。
-
-禁止：
-
-- 新增框架、jsdom、build system、CDN 依赖；
-- 改变 Phase B Test-only 写入逻辑；
-- 改变 content schema / stable ID；
-- 改变 Phase C C1–C9 / publisher / release plan 语义；
-- 真实 Prod 写入或真实 Prod PAT；
-- 修改 myBlog-test / myBlog-prod 业务代码；
-- merge main；
-- reset / clean / force / 重写历史。
-
-## 测试要求
-
-修复后必须真实验证：
-
-- Test / Prod 模式切换可见状态正确；
-- 切换前给真实导出的 `admin.state.document` / `admin.state.blobSha` 设置测试值；
-- 执行模式切换后，这两个真实 state 值仍保持；
-- 搜索 / 类型过滤 / 日期倒序继续通过；
-- Phase B、Phase C plan safety、boundary、publisher mock、diff、review boundary 全部继续通过；
-- `git diff --check` 通过。
+1. 页面打开后是否能一眼理解 `内容维护（Test）` 与 `发布到 Prod` 两个模式；
+2. Test 内容库搜索、类型过滤、日期排序、整行选择编辑是否实际好用；
+3. master-detail 布局在约 1440–1800 px 桌面浏览器中是否自然；
+4. 内容库与编辑器是否不再出现大片无效空白、狭窄列表或巨大重复操作按钮；
+5. 切换到 Prod 再回 Test 后，已加载的 Test 数据与 baseline 是否仍保留；
+6. Phase C 发布流程是否清晰、内容差异是否易扫描；
+7. 浏览器不出现 Prod PAT；
+8. 本阶段不得真实批准或执行 Prod 写入。
 
 ## STOP 状态机
 
-- 当前：`Awaiting ChatGPT Review`。
-- 最小 fix commit + push 后：`Awaiting ChatGPT Review`。
-- ChatGPT Review PASS 后：`Awaiting User Acceptance`。
-- 用户桌面人工验收通过后：`Completed / Accepted`。
-- 任意安全/治理/实现冲突：`Blocked`。
+- 当前：`Awaiting User Acceptance`。
+- 用户桌面人工验收通过后：`Completed / Accepted`；之后才允许另行处理 merge main / 第一次真实受控 Prod 发布。
+- 用户验收失败：回到 `P0 Active (Acceptance Fixes)`，不得自行扩大范围。
+- 任意安全、凭据、治理或实现冲突：`Blocked`。
 
-## 完成后只需报告
+## 完成验收前
 
-- branch
-- previous review-fix SHA
-- final test-fix commit SHA
-- tests / checks
-- push
-- blocker
-
-并确认：无真实 Prod 写入、无真实 Prod PAT、无 Test/Prod 业务代码修改、未 merge main。
+不得 merge main，不得执行真实 Prod 发布。
