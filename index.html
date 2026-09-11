@@ -35,12 +35,12 @@
         </div>
         <div class="editor-tabs"><button type="button" class="active" data-editor-view="edit">编辑</button><button type="button" data-editor-view="preview">预览</button><button type="button" data-editor-view="meta">元数据</button></div><div id="editor-write"><div class="form-grid">
           <label>内容类型<select id="content-kind"><option value="article">文章</option><option value="note">短记</option></select></label>
-          <label>稳定 ID<input id="content-id" type="text" readonly placeholder="新建时生成"></label>
-          <label>日期<input id="content-date" type="text" placeholder="推荐 YYYY-MM-DD；保留既有日期格式"></label>
-          <label class="category-field">分类<input id="content-category" type="text" list="category-options" placeholder="推荐 project、ai、life"></label>
+
+
+
           <datalist id="category-options"><option value="project"><option value="ai"><option value="life"></datalist>
-          <label class="article-only">文章类型<input id="article-type" type="text" value="article" placeholder="article"></label>
-          <label class="article-only">阅读时长<input id="article-reading" type="text" placeholder="例如 5 min"></label>
+
+
           <label class="article-only wide">标题<input id="content-title" type="text" placeholder="文章标题"></label>
           <label class="article-only wide">摘要<input id="article-summary" type="text" placeholder="文章摘要"></label>
           <label class="note-only wide">标签<input id="note-label" type="text" placeholder="短记标签"></label>
@@ -48,7 +48,7 @@
           <label class="topic-only">状态<input id="topic-status" type="text" placeholder="例如 active"></label>
         </div>
         <label class="body-label" for="content-body">正文（Markdown）</label>
-        <div class="editor"><textarea id="content-body" rows="18" placeholder="在此写入 Markdown。图片上传在 Phase B 中禁用。"></textarea><article hidden id="editor-preview" class="preview"><div id="preview"></div></article><article class="preview" id="editor-meta" hidden><p>稳定 ID、日期、分类、类型与阅读时长为元数据；编辑已有内容时可在此查看。</p></article><article class="preview" id="preview" aria-label="Markdown 预览"></article></div>
+        <div class="editor"><textarea id="content-body" rows="18" placeholder="在此写入 Markdown。图片上传在 Phase B 中禁用。"></textarea><article hidden id="editor-preview" class="preview"><div id="preview"></div></article><article class="preview" id="editor-meta" hidden><label>稳定 ID<input id="content-id" type="text" readonly placeholder="新建时生成"></label><label>日期<input id="content-date" type="text" placeholder="推荐 YYYY-MM-DD；保留既有日期格式"></label><label class="category-field">分类<input id="content-category" type="text" list="category-options" placeholder="推荐 project、ai、life"></label><label class="article-only">文章类型<input id="article-type" type="text" value="article" placeholder="article"></label><label class="article-only">阅读时长<input id="article-reading" type="text" placeholder="例如 5 min"></label></article></div>
         <p class="image-notice">图片写入已禁用。纯浏览器 Contents API 无法保证图片与 content.json 原子提交，因此本阶段不会上传或引用图片。</p>
       </section>
       <aside class="side-stack">
