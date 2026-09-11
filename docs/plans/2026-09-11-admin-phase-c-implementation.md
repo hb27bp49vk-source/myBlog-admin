@@ -2,7 +2,8 @@
 
 日期：2026-09-11
 状态：`P0 Active (Implementation)`
-授权基线：`69c50c62c8daa10edee9d7732623dafc16697329`
+实施基线规则：**不得使用写死的旧 SHA 作为分支基线。Executor 必须在创建/重建实施分支前执行 `git pull --ff-only origin main`，并以同步后的最新 `origin/main` / `main` HEAD 作为本轮 implementation base。若 `main != origin/main`、工作区不 clean，或最新治理文件与本 Plan 冲突，必须 STOP。**
+Planning 历史基线：`69c50c62c8daa10edee9d7732623dafc16697329`（仅用于追溯 Planning 完成点，不再作为 Implementation 分支授权基线）
 来源：ChatGPT Review 通过 `docs/plans/2026-09-10-admin-phase-c-planning-decisions.md`
 
 ## 1. 目标
@@ -111,11 +112,12 @@ release plan 至少记录：
 
 Executor 允许：
 
-1. 创建 Phase C 实施分支，建议：`codex/admin-phase-c-implementation`。
-2. 修改 Admin UI / JS / CSS，增加 Phase C 选择、Prod baseline 读取、diff、release plan 生成与人工确认流程。
-3. 新增 GitHub Actions workflow 与实现发布所需的仓库内脚本。
-4. 新增单元 / 集成 / 浏览器行为测试与 fixtures。
-5. 只读访问 Test / Prod 用于 baseline、schema、页面验证。
+1. **先同步并核验实施基线**：`git pull --ff-only origin main` 后确认 `main == origin/main`、工作区 clean，并重新读取 `AGENTS.md`、`docs/ACTIVE_TASK.md` 与本 Plan；随后从该最新 main 创建/重建 `codex/admin-phase-c-implementation`。不得从 Planning 历史 SHA 或同步前 HEAD 建分支。
+2. 创建 Phase C 实施分支，建议：`codex/admin-phase-c-implementation`。
+3. 修改 Admin UI / JS / CSS，增加 Phase C 选择、Prod baseline 读取、diff、release plan 生成与人工确认流程。
+4. 新增 GitHub Actions workflow 与实现发布所需的仓库内脚本。
+5. 新增单元 / 集成 / 浏览器行为测试与 fixtures。
+6. 只读访问 Test / Prod 用于 baseline、schema、页面验证。
 
 Executor 不允许：
 
@@ -123,6 +125,7 @@ Executor 不允许：
 - 实际向 Prod 写内容或资产；Implementation 阶段只实现能力与测试，不做真实 Prod 发布验收。
 - 修改 myBlog-test / myBlog-prod 业务代码或内容协议。
 - 更改 C1–C9 核心边界；发现冲突必须 STOP 并回报 ChatGPT。
+- 在 `main != origin/main`、工作区非 clean、治理文件冲突或实施分支基线无法确认时继续 Implementation。
 
 ## 4. 必须实现的安全行为
 
