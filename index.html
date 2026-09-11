@@ -26,7 +26,7 @@
         <button type="button" class="primary" id="connect-button">读取 Test content.json</button>
       </div>
     </section>
-    <nav class="mode-nav" aria-label="工作模式"><button type="button" class="active" data-mode="test">内容维护 <small>Test</small></button><button type="button" data-mode="prod">发布到 Prod <small>受控流程</small></button></nav>
+    <nav class="mode-nav" aria-label="工作台导航"><button type="button" class="active" data-mode="test" data-filter="article">文章 <small>Test 内容</small></button><button type="button" data-mode="test" data-filter="note">短记 <small>Test 内容</small></button><button type="button" data-mode="prod">发布 <small>Prod 受控流程</small></button></nav>
     <section id="test-mode" class="workspace-grid">
       <section class="panel editor-panel" aria-labelledby="editor-heading">
         <div class="panel-heading">
@@ -60,7 +60,7 @@
           <div id="msg" role="status" aria-live="polite"></div><div id="receipt" class="receipt hidden" aria-live="polite"></div>
         </section>
         <section class="panel library-panel" aria-labelledby="list-heading">
-          <div class="panel-heading compact"><div><h2 id="list-heading">内容库 <span id="library-count">0 条</span></h2><p>搜索、筛选并选择要编辑的 Test 内容。</p></div><button type="button" id="refresh-button" disabled>刷新</button></div><div class="library-tools"><input id="library-search" type="search" placeholder="搜索标题、摘要、正文或 ID"><select id="library-filter"><option value="all">全部类型</option><option value="article">文章</option><option value="note">短记</option><option value="topic">专题</option></select></div>
+          <div class="panel-heading compact"><div><h2 id="list-heading">内容库 <span id="library-count">0 条</span></h2><p>搜索、筛选并选择要编辑的 Test 内容。</p></div><button type="button" id="refresh-button" disabled>刷新</button></div><div class="library-tools"><input id="library-search" type="search" placeholder="搜索标题、摘要、正文或 ID"><select id="library-filter"><option value="all">全部内容</option><option value="article">文章</option><option value="note">短记</option></select><select id="category-filter"><option value="all">全部分类</option><option value="project">项目</option><option value="ai">AI</option><option value="life">生活</option></select></div>
           <div id="post-list" class="post-list"><p class="muted">连接 Test 后显示内容。</p></div>
         </section>
       </aside>

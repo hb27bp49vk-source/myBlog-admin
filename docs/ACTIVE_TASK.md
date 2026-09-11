@@ -1,12 +1,14 @@
 # ACTIVE TASK — myBlog Admin
 
-最后更新：2026-09-11（用户否决上一版前端验收，Promote Workbench V2）
+最后更新：2026-09-11（Admin Workbench V2 完成，Awaiting ChatGPT Review）
 
 ## Status
 
-`P0 Active (Implementation)`（myBlog Admin Workbench V2）
+`Awaiting ChatGPT Review`（myBlog Admin Workbench V2）
 
 上一版 Frontend Redesign 虽通过 ChatGPT 代码 Review，但用户桌面人工验收明确 FAIL：布局在真实 16:9 桌面窗口仍出现内容侵占、编辑区被压窄、信息架构混乱等问题。用户决定停止继续修补上一版维护台，按新的 CMS 工作台方向直接重构。
+
+Workbench V2 已完成并待 ChatGPT Review。
 
 当前权威 Plan：
 
@@ -92,7 +94,7 @@ Phase C 安全 Review 继续有效：
 
 ## STOP 状态机
 
-- 当前：`P0 Active (Implementation)`。
+- 当前：`Awaiting ChatGPT Review`。
 - Workbench V2 implementation commit + push 后：`Awaiting ChatGPT Review`。
 - ChatGPT Review PASS 后：`Awaiting User Acceptance`。
 - 用户 16:9 桌面人工验收通过后：`Completed / Accepted`。
