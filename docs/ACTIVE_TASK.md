@@ -4,13 +4,13 @@
 
 ## Status
 
-`P0 Active (Implementation)`（Admin Phase C —— 安全 Prod Publisher）
+`Awaiting ChatGPT Review`（Admin Phase C —— 安全 Prod Publisher）
 
-当前执行已由 ChatGPT 明确授权。Executor 完成 Implementation 后必须 STOP 在 `Awaiting ChatGPT Review`，不得自行 merge main、不得自行进入真实 Prod 发布。
+Implementation 已完成并待 ChatGPT Review。不得自行 merge main、不得自行进入真实 Prod 发布。
 
 ## 当前优先级
 
-- **`P0 Active (Implementation)`**：Admin Phase C —— 安全 Prod Publisher。
+- **`Awaiting ChatGPT Review`**：Admin Phase C —— 安全 Prod Publisher（Implementation 已提交，等待 Review）。
 - **`P1 Queued`**：无。
 - **`P2 Backlog`**：等待 ChatGPT 后续派发。
 

@@ -1,0 +1,4 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const ui=fs.readFileSync('phase-c.js','utf8'),workflow=fs.readFileSync('.github/workflows/publish-prod-content.yml','utf8'),publisher=fs.readFileSync('scripts/publish-release.cjs','utf8');
+assert.match(workflow,/workflow_dispatch/);assert.match(workflow,/environment: prod-content-publisher/);assert.match(workflow,/MYBLOG_PROD_FINE_GRAINED_PAT/);assert.doesNotMatch(ui,/MYBLOG_PROD_FINE_GRAINED_PAT|PROD_PAT|localStorage|sessionStorage|console\.log/);assert.match(publisher,/BASELINE_CONFLICT/);assert.match(publisher,/force:false/);assert.match(publisher,/docs\/releases\//);assert.match(publisher,/chance-hang\/myBlog-prod/);assert.match(publisher,/assets\\\/uploads/);console.log('Phase C boundary source checks passed');

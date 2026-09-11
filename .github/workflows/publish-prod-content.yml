@@ -1,0 +1,21 @@
+name: Publish approved content to Prod
+on:
+  workflow_dispatch:
+    inputs:
+      release_plan:
+        description: Immutable reviewed Phase C release plan JSON
+        required: true
+        type: string
+permissions: {}
+jobs:
+  publish:
+    environment: prod-content-publisher
+    runs-on: ubuntu-latest
+    permissions: {contents: read}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish one atomic Prod commit
+        env:
+          PROD_PAT: ${{ secrets.MYBLOG_PROD_FINE_GRAINED_PAT }}
+          RELEASE_PLAN: ${{ inputs.release_plan }}
+        run: node scripts/publish-release.cjs

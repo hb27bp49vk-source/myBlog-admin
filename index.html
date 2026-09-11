@@ -64,7 +64,24 @@
         </section>
       </aside>
     </section>
+    <section class="panel" aria-labelledby="phase-c-heading">
+      <h2 id="phase-c-heading">Phase C：受控 Prod 内容提升</h2>
+      <p>浏览器不会接触 Prod PAT。先读取公开 Prod 基线，生成并人工复核不可变 release plan；提交后仍须 GitHub Environment approval。</p>
+      <dl class="baseline"><div><dt>Prod main 基线</dt><dd id="phase-c-prod-sha">尚未读取</dd></div></dl>
+      <label>Test Pages URL<input id="phase-c-test-url" type="url" placeholder="已人工验收的 Test Pages URL"></label>
+      <label>已验收 Test commit SHA<input id="phase-c-test-sha" type="text" placeholder="40 位 SHA"></label>
+      <label>操作员标识<input id="phase-c-operator" type="text" placeholder="GitHub 用户名或审批标识"></label>
+      <label><input id="phase-c-confirmed" type="checkbox"> 我已完成人工 Test 页面验收</label>
+      <button type="button" id="phase-c-read">读取 Prod 基线</button>
+      <div id="phase-c-selection" class="post-list"></div>
+      <button type="button" class="primary" id="phase-c-plan" disabled>生成 release plan</button>
+      <label>复核后的 release plan<textarea id="phase-c-output" rows="12" readonly></textarea></label>
+      <label>仅用于触发本仓库 workflow 的操作员 token<input id="phase-c-dispatch-token" type="password" autocomplete="off"></label>
+      <button type="button" class="primary" id="phase-c-dispatch" disabled>提交受控发布会话</button>
+      <p id="phase-c-msg" role="status" aria-live="polite"></p>
+    </section>
   </main>
   <script src="./admin.js"></script>
+  <script src="./phase-c.js"></script>
 </body>
 </html>
